@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0d0d1a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="ProCourse">
+  <title>ProCourse</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0d0d1a;
+      --surface: #13131f;
+      --card: #1a1a2e;
+      --card2: #1f1f35;
+      --accent: #f0c040;
+      --accent2: #e05555;
+      --accent3: #40d9a0;
+      --text: #f0f0f8;
+      --muted: #6666aa;
+      --border: rgba(240,192,64,0.15);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 50% 40% at 80% 10%, rgba(240,192,64,0.08) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 50% at 10% 80%, rgba(64,217,160,0.06) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .app {
+      position: relative;
+      z-index: 1;
+      max-width: 430px;
+      margin: 0 auto;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ===== HEADER ===== */
+    header {
+      padding: 20px 20px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(13,13,26,0.85);
+    }
+
+    .logo {
+      font-family: 'Syne', sans-serif;
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--accent);
+      letter-spacing: -0.5px;
+    }
+
+    .logo span { color: var(--text); }
+
+    .header-badge {
+      background: rgba(240,192,64,0.1);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 12px;
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    /* ===== PAGES ===== */
+    .page {
+      display: none;
+      flex: 1;
+      padding: 20px;
+      padding-bottom: 90px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .page.active { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== ГОЛОВНА ===== */
+    .hero {
+      background: linear-gradient(135deg, var(--card), rgba(240,192,64,0.1));
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 28px 24px;
+      margin-bottom: 20px;
+    }
+
+    .hero-tag {
+      display: inline-block;
+      background: var(--accent);
+      color: #0d0d1a;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-bottom: 12px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .hero h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: 26px;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 10px;
+    }
+
+    .hero p {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .progress-wrap {
+      background: rgba(255,255,255,0.05);
+      border-radius: 100px;
+      height: 6px;
+      margin-bottom: 8px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), #ffdd80);
+      border-radius: 100px;
+      width: 35%;
+      transition: width 0.8s ease;
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .progress-label span:first-child { color: var(--accent); font-weight: 600; }
+
+    /* Section title */
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+      margin-top: 24px;
+    }
+
+    /* Lesson cards */
+    .lesson-card {
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 18px;
+      padding: 16px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      cursor: pointer;
+      transition: border-color 0.2s, transform 0.15s;
+    }
+
+    .lesson-card:hover { border-color: var(--border); }
+    .lesson-card:active { transform: scale(0.98); }
+
+    .lesson-card.done { opacity: 0.6; }
+
+    .lesson-thumb {
+      width: 56px;
+      height: 56px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+
+    .lesson-thumb.yellow { background: rgba(240,192,64,0.15); }
+    .lesson-thumb.green { background: rgba(64,217,160,0.15); }
+    .lesson-thumb.red { background: rgba(224,85,85,0.15); }
+    .lesson-thumb.blue { background: rgba(100,150,255,0.15); }
+
+    .lesson-info { flex: 1; }
+
+    .lesson-num {
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 3px;
+      font-weight: 500;
+    }
+
+    .lesson-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .lesson-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .lesson-status {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 2px solid var(--muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 12px;
+    }
+
+    .lesson-status.done {
+      background: var(--accent3);
+      border-color: var(--accent3);
+      color: #0d0d1a;
+    }
+
+    .lesson-status.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #0d0d1a;
+    }
+
+    /* Continue button */
+    .btn-primary {
+      width: 100%;
+      background: var(--accent);
+      border: none;
+      border-radius: 14px;
+      padding: 15px;
+      color: #0d0d1a;
+      font-family: 'Syne', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.15s, opacity 0.15s;
+      margin-top: 8px;
+    }
+
+    .btn-primary:active { transform: scale(0.97); opacity: 0.9; }
+
+    /* ===== МАТЕРІАЛИ ===== */
+    .material-card {
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 18px;
+      padding: 18px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      transition: border-color 0.2s, transform 0.15s;
+    }
+
+    .material-card:active { transform: scale(0.98); }
+    .material-card:hover { border-color: var(--border); }
+
+    .material-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .material-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .material-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .material-sub {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .material-desc {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+
+    .material-tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      background: rgba(255,255,255,0.06);
+      border-radius: 20px;
+      padding: 4px 10px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    /* ===== УСПІХИ ===== */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .stat-box {
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 18px;
+      padding: 20px 16px;
+      text-align: center;
+    }
+
+    .stat-box.wide {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      text-align: left;
+    }
+
+    .stat-emoji { font-size: 30px; margin-bottom: 8px; }
+    .stat-value {
+      font-family: 'Syne', sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+    .stat-label { font-size: 12px; color: var(--muted); }
+
+    .achievement {
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 18px;
+      padding: 16px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .achievement.locked { opacity: 0.4; }
+
+    .ach-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+
+    .ach-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 3px;
+    }
+
+    .ach-desc { font-size: 13px; color: var(--muted); }
+
+    .ach-badge {
+      margin-left: auto;
+      background: rgba(64,217,160,0.15);
+      border-radius: 20px;
+      padding: 4px 10px;
+      font-size: 11px;
+      color: var(--accent3);
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .ach-badge.locked {
+      background: rgba(255,255,255,0.05);
+      color: var(--muted);
+    }
+
+    /* Weekly chart */
+    .week-chart {
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 18px;
+      padding: 18px;
+      margin-bottom: 12px;
+    }
+
+    .week-chart h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .chart-bars {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      height: 70px;
+    }
+
+    .chart-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      height: 100%;
+      justify-content: flex-end;
+    }
+
+    .chart-bar {
+      width: 100%;
+      background: rgba(240,192,64,0.2);
+      border-radius: 6px 6px 0 0;
+      transition: height 0.6s ease;
+    }
+
+    .chart-bar.active { background: var(--accent); }
+
+    .chart-day {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    /* ===== NAV ===== */
+    nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 430px;
+      display: flex;
+      border-top: 1px solid var(--border);
+      background: rgba(13,13,26,0.92);
+      backdrop-filter: blur(20px);
+      padding: 8px 0 24px;
+      z-index: 100;
+    }
+
+    .nav-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 8px 4px;
+      cursor: pointer;
+      opacity: 0.4;
+      transition: opacity 0.2s;
+    }
+
+    .nav-item.active { opacity: 1; }
+
+    .nav-icon {
+      width: 42px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 20px;
+      transition: background 0.2s;
+      font-size: 20px;
+    }
+
+    .nav-item.active .nav-icon {
+      background: rgba(240,192,64,0.15);
+    }
+
+    .nav-label {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+    }
+
+    .nav-item.active .nav-label { color: var(--accent); }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 90px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 20px;
+      font-size: 13px;
+      opacity: 0;
+      transition: all 0.3s ease;
+      z-index: 200;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Video modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      z-index: 300;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.open { display: flex; }
+
+    .modal {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      width: 100%;
+      max-width: 390px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 16px;
+    }
+
+    .modal-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 18px;
+      font-weight: 800;
+      flex: 1;
+      padding-right: 12px;
+    }
+
+    .modal-close {
+      background: rgba(255,255,255,0.08);
+      border: none;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      color: var(--text);
+      cursor: pointer;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .video-placeholder {
+      background: #000;
+      border-radius: 14px;
+      aspect-ratio: 16/9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .video-placeholder::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(240,192,64,0.1), transparent);
+    }
+
+    .play-btn {
+      width: 60px;
+      height: 60px;
+      background: var(--accent);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      color: #0d0d1a;
+      z-index: 1;
+      transition: transform 0.2s;
+    }
+
+    .video-placeholder:active .play-btn { transform: scale(0.9); }
+
+    .modal-desc {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    .mark-done-btn {
+      width: 100%;
+      background: var(--accent3);
+      border: none;
+      border-radius: 14px;
+      padding: 14px;
+      color: #0d0d1a;
+      font-family: 'Syne', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.15s;
+    }
+
+    .mark-done-btn:active { transform: scale(0.97); }
+  </style>
+</head>
+<body>
+
+<div class="app">
+  <header>
+    <div class="logo">Pro<span>Course</span></div>
+    <div class="header-badge">Веб-розробка</div>
+  </header>
+
+  <!-- ===== ГОЛОВНА ===== -->
+  <div class="page active" id="page-home">
+
+    <div class="hero">
+      <div class="hero-tag">🔥 Активний курс</div>
+      <h1>Веб-розробка з нуля до профі</h1>
+      <p>Вчись у власному темпі. Практичні відео уроки та реальні проекти.</p>
+      <div class="progress-wrap">
+        <div class="progress-bar" id="progress-bar"></div>
+      </div>
+      <div class="progress-label">
+        <span id="progress-text">35% пройдено</span>
+        <span id="progress-lessons">7 з 20 уроків</span>
+      </div>
+    </div>
+
+    <button class="btn-primary" onclick="openLesson(1)">▶ Продовжити урок 8</button>
+
+    <div class="section-title">Модуль 1 — Основи</div>
+
+    <div class="lesson-card done" onclick="openLesson(0)">
+      <div class="lesson-thumb yellow">🌐</div>
+      <div class="lesson-info">
+        <div class="lesson-num">Урок 1</div>
+        <div class="lesson-title">Як працює інтернет</div>
+        <div class="lesson-meta"><span>⏱ 12 хв</span><span>✅ Пройдено</span></div>
+      </div>
+      <div class="lesson-status done">✓</div>
+    </div>
+
+    <div class="lesson-card done" onclick="openLesson(1)">
+      <div class="lesson-thumb yellow">📄</div>
+      <div class="lesson-info">
+        <div class="lesson-num">Урок 2</div>
+        <div class="lesson-title">HTML структура сторінки</div>
+        <div class="lesson-meta"><span>⏱ 18 хв</span><span>✅ Пройдено</span></div>
+      </div>
+      <div class="lesson-status done">✓</div>
+    </div>
+
+    <div class="lesson-card" onclick="openLesson(2)">
+      <div class="lesson-thumb green">🎨</div>
+      <div class="lesson-info">
+        <div class="lesson-num">Урок 3</div>
+        <div class="lesson-title">CSS стилі та кольори</div>
+        <div class="lesson-meta"><span>⏱ 22 хв</span><span>🔓 Доступно</span></div>
+      </div>
+      <div class="lesson-status active">▶</div>
+    </div>
+
+    <div class="lesson-card" onclick="openLesson(3)">
+      <div class="lesson-thumb blue">⚡</div>
+      <div class="lesson-info">
+        <div class="lesson-num">Урок 4</div>
+        <div class="lesson-title">JavaScript основи</div>
+        <div class="lesson-meta"><span>⏱ 30 хв</span><span>🔒 Заблоковано</span></div>
+      </div>
+      <div class="lesson-status">🔒</div>
+    </div>
+
+    <div class="lesson-card" onclick="openLesson(4)">
+      <div class="lesson-thumb red">📱</div>
+      <div class="lesson-info">
+        <div class="lesson-num">Урок 5</div>
+        <div class="lesson-title">Адаптивний дизайн</div>
+        <div class="lesson-meta"><span>⏱ 25 хв</span><span>🔒 Заблоковано</span></div>
+      </div>
+      <div class="lesson-status">🔒</div>
+    </div>
+
+  </div>
+
+  <!-- ===== МАТЕРІАЛИ ===== -->
+  <div class="page" id="page-materials">
+
+    <div class="section-title" style="margin-top:4px">Всі матеріали</div>
+
+    <div class="material-card" onclick="showToast('📖 Відкриваємо конспект...')">
+      <div class="material-header">
+        <div class="material-icon" style="background:rgba(240,192,64,0.15)">📖</div>
+        <div>
+          <div class="material-title">Конспект уроків</div>
+          <div class="material-sub">PDF • 24 сторінки</div>
+        </div>
+      </div>
+      <div class="material-desc">Повний конспект всіх пройдених уроків з прикладами коду та поясненнями.</div>
+      <div class="material-tags">
+        <span class="tag">HTML</span>
+        <span class="tag">CSS</span>
+        <span class="tag">Основи</span>
+      </div>
+    </div>
+
+    <div class="material-card" onclick="showToast('💻 Відкриваємо код...')">
+      <div class="material-header">
+        <div class="material-icon" style="background:rgba(64,217,160,0.15)">💻</div>
+        <div>
+          <div class="material-title">Практичні завдання</div>
+          <div class="material-sub">ZIP архів • 12 файлів</div>
+        </div>
+      </div>
+      <div class="material-desc">Стартові файли для виконання домашніх завдань та практичних вправ.</div>
+      <div class="material-tags">
+        <span class="tag">Практика</span>
+        <span class="tag">Код</span>
+        <span class="tag">Проекти</span>
+      </div>
+    </div>
+
+    <div class="material-card" onclick="showToast('🎯 Відкриваємо шпаргалку...')">
+      <div class="material-header">
+        <div class="material-icon" style="background:rgba(224,85,85,0.15)">🎯</div>
+        <div>
+          <div class="material-title">Шпаргалка HTML тегів</div>
+          <div class="material-sub">PDF • 2 сторінки</div>
+        </div>
+      </div>
+      <div class="material-desc">Всі основні HTML теги в одному місці з прикладами використання.</div>
+      <div class="material-tags">
+        <span class="tag">HTML</span>
+        <span class="tag">Шпаргалка</span>
+      </div>
+    </div>
+
+    <div class="material-card" onclick="showToast('🎨 Відкриваємо гайд...')">
+      <div class="material-header">
+        <div class="material-icon" style="background:rgba(100,150,255,0.15)">🎨</div>
+        <div>
+          <div class="material-title">Гайд по CSS кольорах</div>
+          <div class="material-sub">PDF • 8 сторінок</div>
+        </div>
+      </div>
+      <div class="material-desc">Як правильно підбирати кольори, працювати з градієнтами та палітрами.</div>
+      <div class="material-tags">
+        <span class="tag">CSS</span>
+        <span class="tag">Дизайн</span>
+        <span class="tag">Кольори</span>
+      </div>
+    </div>
+
+    <div class="material-card" onclick="showToast('🔗 Відкриваємо посилання...')">
+      <div class="material-header">
+        <div class="material-icon" style="background:rgba(180,100,255,0.15)">🔗</div>
+        <div>
+          <div class="material-title">Корисні ресурси</div>
+          <div class="material-sub">Посилання • 15 сайтів</div>
+        </div>
+      </div>
+      <div class="material-desc">Підібрані сайти, документація та інструменти для веб-розробника.</div>
+      <div class="material-tags">
+        <span class="tag">MDN</span>
+        <span class="tag">Документація</span>
+        <span class="tag">Інструменти</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== УСПІХИ ===== -->
+  <div class="page" id="page-achievements">
+
+    <div class="section-title" style="margin-top:4px">Мій прогрес</div>
+
+    <div class="stats-grid">
+      <div class="stat-box">
+        <div class="stat-emoji">📚</div>
+        <div class="stat-value">7</div>
+        <div class="stat-label">Уроків пройдено</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-emoji">⏱</div>
+        <div class="stat-value">3.5</div>
+        <div class="stat-label">Годин навчання</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-emoji">🔥</div>
+        <div class="stat-value">5</div>
+        <div class="stat-label">Днів поспіль</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-emoji">⭐</div>
+        <div class="stat-value">340</div>
+        <div class="stat-label">XP балів</div>
+      </div>
+    </div>
+
+    <div class="week-chart">
+      <h3>📅 Активність цього тижня</h3>
+      <div class="chart-bars">
+        <div class="chart-col">
+          <div class="chart-bar active" style="height:45px"></div>
+          <div class="chart-day">Пн</div>
+        </div>
+        <div class="chart-col">
+          <div class="chart-bar active" style="height:60px"></div>
+          <div class="chart-day">Вт</div>
+        </div>
+        <div class="chart-col">
+          <div class="chart-bar" style="height:20px"></div>
+          <div class="chart-day">Ср</div>
+        </div>
+        <div class="chart-col">
+          <div class="chart-bar active" style="height:55px"></div>
+          <div class="chart-day">Чт</div>
+        </div>
+        <div class="chart-col">
+          <div class="chart-bar active" style="height:70px"></div>
+          <div class="chart-day">Пт</div>
+        </div>
+        <div class="chart-col">
+          <div class="chart-bar" style="height:10px"></div>
+          <div class="chart-day">Сб</div>
+        </div>
+        <div class="chart-col">
+          <div class="chart-bar" style="height:5px"></div>
+          <div class="chart-day">Нд</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title">Досягнення</div>
+
+    <div class="achievement">
+      <div class="ach-icon" style="background:rgba(240,192,64,0.15)">🚀</div>
+      <div>
+        <div class="ach-title">Перший крок</div>
+        <div class="ach-desc">Пройшов перший урок курсу</div>
+      </div>
+      <div class="ach-badge">Отримано</div>
+    </div>
+
+    <div class="achievement">
+      <div class="ach-icon" style="background:rgba(64,217,160,0.15)">🔥</div>
+      <div>
+        <div class="ach-title">На вогні</div>
+        <div class="ach-desc">5 днів навчання поспіль</div>
+      </div>
+      <div class="ach-badge">Отримано</div>
+    </div>
+
+    <div class="achievement">
+      <div class="ach-icon" style="background:rgba(240,192,64,0.15)">⚡</div>
+      <div>
+        <div class="ach-title">Швидкий старт</div>
+        <div class="ach-desc">3 уроки за один день</div>
+      </div>
+      <div class="ach-badge">Отримано</div>
+    </div>
+
+    <div class="achievement locked">
+      <div class="ach-icon" style="background:rgba(255,255,255,0.05)">🏆</div>
+      <div>
+        <div class="ach-title">Майстер HTML</div>
+        <div class="ach-desc">Пройди всі уроки модуля 1</div>
+      </div>
+      <div class="ach-badge locked">🔒</div>
+    </div>
+
+    <div class="achievement locked">
+      <div class="ach-icon" style="background:rgba(255,255,255,0.05)">💎</div>
+      <div>
+        <div class="ach-title">Профі</div>
+        <div class="ach-desc">Завершити весь курс</div>
+      </div>
+      <div class="ach-badge locked">🔒</div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Bottom nav -->
+<nav>
+  <div class="nav-item active" onclick="switchPage('home', this)">
+    <div class="nav-icon">🏠</div>
+    <div class="nav-label">Головна</div>
+  </div>
+  <div class="nav-item" onclick="switchPage('materials', this)">
+    <div class="nav-icon">📚</div>
+    <div class="nav-label">Матеріали</div>
+  </div>
+  <div class="nav-item" onclick="switchPage('achievements', this)">
+    <div class="nav-icon">🏆</div>
+    <div class="nav-label">Успіхи</div>
+  </div>
+</nav>
+
+<!-- Video modal -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-title">Урок</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="video-placeholder" onclick="showToast('▶ Відео запускається...')">
+      <div class="play-btn">▶</div>
+    </div>
+    <div class="modal-desc" id="modal-desc">Опис уроку</div>
+    <button class="mark-done-btn" onclick="markDone()">✓ Позначити як пройдено</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  const lessons = [
+    { title: "Як працює інтернет", desc: "Дізнайся як браузер, сервер та DNS взаємодіють між собою. Базові поняття для кожного розробника.", done: true },
+    { title: "HTML структура сторінки", desc: "Вивчи основні теги HTML: head, body, div, p, h1-h6. Зроби свою першу веб-сторінку.", done: true },
+    { title: "CSS стилі та кольори", desc: "Як стилізувати HTML елементи. Кольори, шрифти, відступи та розміри.", done: false },
+    { title: "JavaScript основи", desc: "Змінні, функції, умови та цикли. Твоя перша програма на JavaScript.", done: false },
+    { title: "Адаптивний дизайн", desc: "Як зробити сайт зручним на телефоні, планшеті та комп'ютері.", done: false },
+  ];
+
+  let currentLesson = 0;
+
+  function switchPage(name, el) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('page-' + name).classList.add('active');
+    el.classList.add('active');
+  }
+
+  function openLesson(idx) {
+    currentLesson = idx;
+    const l = lessons[idx];
+    document.getElementById('modal-title').textContent = `Урок ${idx + 1}: ${l.title}`;
+    document.getElementById('modal-desc').textContent = l.desc;
+    document.getElementById('modal').classList.add('open');
+  }
+
+  function closeModal() {
+    document.getElementById('modal').classList.remove('open');
+  }
+
+  function markDone() {
+    lessons[currentLesson].done = true;
+    closeModal();
+    updateProgress();
+    showToast('🎉 Урок позначено як пройдено!');
+  }
+
+  function updateProgress() {
+    const done = lessons.filter(l => l.done).length;
+    const pct = Math.round(done / 20 * 100);
+    document.getElementById('progress-bar').style.width = pct + '%';
+    document.getElementById('progress-text').textContent = pct + '% пройдено';
+    document.getElementById('progress-lessons').textContent = done + ' з 20 уроків';
+  }
+
+  let toastTimer;
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+  }
+
+  // Close modal on overlay click
+  document.getElementById('modal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+
+  updateProgress();
+</script>
+</body>
+</html>
